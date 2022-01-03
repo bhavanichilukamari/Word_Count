@@ -31,7 +31,10 @@ object Spark_sol_1 extends App{
   val joined_df = df_1.join(df_2,df_1("UserId") === df_2("UserId"),"outer").drop(df_2("UserId"))
   joined_df.show()
 println("=====The distinct Locations=====")
-  val distinct_count = joined_df.select ("Location") .distinct().show
+ val distinct_count1 = joined_df.select ("location","Product_Id")
+  .groupBy("Product_Id")
+    .agg(countDistinct("Location") as "countLocation")
+    .show()
   println("======The products brought by each user======")
   val count_products = joined_df.groupBy("UserId")
     .agg(expr("count(Product_Id) As Total")).orderBy("UserId")
